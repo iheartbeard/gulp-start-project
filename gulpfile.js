@@ -53,7 +53,7 @@ gulp.task("serve", function() {
     notify: false
   });
   gulp.watch(path.watch.html, ["html"])
-  gulp.watch(path.watch.style, ["style"])
+  gulp.watch(path.watch.style, ["css"])
 });
 
 // Очистка папки build
