@@ -18,6 +18,7 @@
     "gulp-sass": "latest",
     "gulp-rename": "latest",
     "gulp-csso": "latest",
+    "gulp-uglify": "latest",
     "gulp-plumber": "latest",
     "gulp-postcss": "latest",
     "gulp-imagemin": "latest",
