@@ -1,4 +1,7 @@
 {
+  "blocks": {
+
+  },
   "dirs": {
     "srcPath": "./src/",
     "buildPath": "./build/",
