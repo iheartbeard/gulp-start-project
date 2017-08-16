@@ -1,10 +1,10 @@
 {
   "blocks": {
-
+    "form": []
   },
   "dirs": {
     "srcPath": "./src/",
     "buildPath": "./build/",
-    "blocksDirName": "blocks"
+    "blocksDirName": "_include"
   }
 }
