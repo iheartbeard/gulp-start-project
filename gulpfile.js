@@ -1,52 +1,34 @@
 "use strict";
 
-var gulp = require('gulp');
-var sass = require('gulp-sass');
-var plumber = require('gulp-plumber');
-var postcss = require('gulp-postcss');
-var rigger = require('gulp-rigger');
-var autoprefixer = require('autoprefixer');
-var mqpacker = require('css-mqpacker');
-var minify = require('gulp-csso');
-var uglify = require('gulp-uglify');
-var imagemin = require('gulp-imagemin');
-var rename = require('gulp-rename');
-var svgmin = require('gulp-svgmin');
-var svgstore = require('gulp-svgstore');
-var run = require('run-sequence');
-var del = require('del');
-var server = require('browser-sync');
-var reload = server.reload;
+// Получение настроек проекта из projectConfig.json
+const pjson = require('./projectConfig.json');
+const path = pjson.directories;
 
-var path = {
-  public: {
-    css: 'build/css',
-    js: 'build/js',
-    img: 'build/img',
-    fonts: 'build/fonts'
-  },
-  src: {
-    html: 'src/*.html',
-    style: 'src/sсss/style.scss',
-    js: 'src/js/*.js',
-    images: 'src/img/**/*.*',
-    fonts: 'src/fonts/**/*.*'
-  },
-  watch: {
-    html: 'src/**/*.html',
-    style: 'src/scss/**/*.scss',
-    js: "src/js/**/*.js",
-    images: 'src/img/**/*.*',
-    fonts: 'src/fonts/**/*.*'
-  },
-  production: 'build/'
-}
+const gulp = require('gulp');
+const sass = require('gulp-sass');
+const plumber = require('gulp-plumber');
+const postcss = require('gulp-postcss');
+const rigger = require('gulp-rigger');
+const autoprefixer = require('autoprefixer');
+const mqpacker = require('css-mqpacker');
+const minify = require('gulp-csso');
+const uglify = require('gulp-uglify');
+const imagemin = require('gulp-imagemin');
+const rename = require('gulp-rename');
+const svgmin = require('gulp-svgmin');
+const svgstore = require('gulp-svgstore');
+const run = require('run-sequence');
+const del = require('del');
+const server = require('browser-sync');
+const reload = server.reload;
+
+
 
 // Локальный сервер + слежение за изменением файлов
 gulp.task('serv', function() {
   server({
     server: {
-      baseDir: path.production
+      baseDir: path.buildPath
     },
     port: 8080,
     open: true,
@@ -58,20 +40,23 @@ gulp.task('serv', function() {
 
 // Очистка папки build
 gulp.task('clean', function() {
-  return del(path.production);
+  return del(path.buildPath);
 });
 
 // Cборка html
 gulp.task('html', function () {
+  console.log('Сборка html');
   gulp.src(path.src.html)
     .pipe(rigger())
-    .pipe(gulp.dest(path.production))
+    .pipe(gulp.dest(path.buildPath))
     .pipe(reload({stream: true}));
 });
 
 // Сборка стилей
 gulp.task('css', function() {
-  gulp.src('src/scss/style.scss')
+  console.log('Cборка стилей');
+  gulp.src(path.src.style)
+  // gulp.src('src/scss/style.scss')
     .pipe(plumber())
     .pipe(sass())
     .pipe(postcss([
@@ -90,6 +75,7 @@ gulp.task('css', function() {
 
 // Оптимизация изображений
 gulp.task('images', function() {
+  console.log('Оптимизация изображений');
   return gulp.src(path.src.images)
     .pipe(imagemin([
       imagemin.optipng({optimizationLevel: 3}),
@@ -101,6 +87,7 @@ gulp.task('images', function() {
 
 // Оптимизация JS
 gulp.task('js', function () {
+  console.log('Оптимизация JS');
   gulp.src(path.src.js)
     .pipe(uglify())
     .pipe(rename({suffix: '.min'}))
@@ -109,7 +96,8 @@ gulp.task('js', function () {
 });
 
 // Копирование шрифтов в папку build
-gulp.task('copy', function() {
+gulp.task('copy:fonts', function() {
+  console.log('Копирование шрифтов');
   gulp.src(path.src.fonts)
     .pipe(gulp.dest(path.public.fonts));
 });
@@ -122,6 +110,6 @@ gulp.task('build', function() {
     'css',
     'images',
     'js',
-    'copy'
+    'copy:fonts'
   );
 });
