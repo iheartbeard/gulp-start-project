@@ -1,12 +1,13 @@
 'use strict';
 
 // Генератор файлов блока (позаимстован отсюда: https://github.com/nicothin/NTH-start-project)
+
 // Использование: node createBlock.js [имя блока] [доп. расширения через пробел]
 
 const fs = require('fs');
 const projectConfig = require('./projectConfig.json');
 
-const dirs = projectConfig.dirs;
+const dirs = projectConfig.directories;
 const mkdirp = require('mkdirp');
 
 const blockName = process.argv[2];                                                // получим имя блока
