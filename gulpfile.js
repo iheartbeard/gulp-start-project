@@ -45,7 +45,7 @@ gulp.task('clean', function() {
 
 // Cборка html
 gulp.task('html', function () {
-  console.log('Сборка html');
+  console.log('---------- Сборка html');
   gulp.src(path.src.html)
     .pipe(rigger())
     .pipe(gulp.dest(path.buildPath))
@@ -54,9 +54,9 @@ gulp.task('html', function () {
 
 // Сборка стилей
 gulp.task('css', function() {
-  console.log('Cборка стилей');
-  gulp.src(path.src.style)
-  // gulp.src('src/scss/style.scss')
+  console.log('---------- Cборка стилей');
+  // gulp.src(path.src.style)
+  gulp.src('src/scss/style.scss')
     .pipe(plumber())
     .pipe(sass())
     .pipe(postcss([
@@ -75,7 +75,7 @@ gulp.task('css', function() {
 
 // Оптимизация изображений
 gulp.task('images', function() {
-  console.log('Оптимизация изображений');
+  console.log('---------- Оптимизация изображений');
   return gulp.src(path.src.images)
     .pipe(imagemin([
       imagemin.optipng({optimizationLevel: 3}),
@@ -87,7 +87,7 @@ gulp.task('images', function() {
 
 // Оптимизация JS
 gulp.task('js', function () {
-  console.log('Оптимизация JS');
+  console.log('---------- Оптимизация JS');
   gulp.src(path.src.js)
     .pipe(uglify())
     .pipe(rename({suffix: '.min'}))
@@ -97,13 +97,14 @@ gulp.task('js', function () {
 
 // Копирование шрифтов в папку build
 gulp.task('copy:fonts', function() {
-  console.log('Копирование шрифтов');
+  console.log('---------- Копирование шрифтов');
   gulp.src(path.src.fonts)
     .pipe(gulp.dest(path.public.fonts));
 });
 
 // Запуск сборки проекта
 gulp.task('build', function() {
+  console.log('---------- Начата сборка проекта');
   run(
     'clean',
     'html',
