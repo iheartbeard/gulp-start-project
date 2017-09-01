@@ -1,4 +1,7 @@
 {
+  "blocks": {
+
+  },
   "directories": {
     "srcPath": "./src/",
     "buildPath": "./build/",
@@ -10,7 +13,7 @@
       "fonts": "./build/fonts"
     },
     "src": {
-      "html": "./src/_include/*.html",
+      "html": "./src/*.html",
       "style": "./src/sсss/style.scss",
       "js": "./src/js/*.js",
       "images": "./src/img/**/*.*",
