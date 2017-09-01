@@ -61,8 +61,7 @@ gulp.task('html', function () {
 // Сборка стилей
 gulp.task('css', function() {
   console.log('---------- Cборка стилей');
-  // gulp.src(path.src.style)
-  gulp.src('src/scss/style.scss')
+  gulp.src('./src/scss/style.scss')
     .pipe(plumber())
     .pipe(sass())
     .pipe(postcss([
