@@ -8,13 +8,14 @@ const gulp = require('gulp');
 const sass = require('gulp-sass');
 const plumber = require('gulp-plumber');
 const postcss = require('gulp-postcss');
-const rigger = require('gulp-rigger');
+const include = require('gulp-file-include');
 const autoprefixer = require('autoprefixer');
 const mqpacker = require('css-mqpacker');
 const minify = require('gulp-csso');
 const uglify = require('gulp-uglify');
 const imagemin = require('gulp-imagemin');
 const rename = require('gulp-rename');
+const replace = require('gulp-replace');
 const svgmin = require('gulp-svgmin');
 const svgstore = require('gulp-svgstore');
 const run = require('run-sequence');
@@ -47,7 +48,12 @@ gulp.task('clean', function() {
 gulp.task('html', function () {
   console.log('---------- Сборка html');
   gulp.src(path.src.html)
-    .pipe(rigger())
+    .pipe(include({
+      prefix: '@@',
+      basepath: '@file',
+      indent: true,
+    }))
+    .pipe(replace(/\n\s*<!--DEV[\s\S]+?-->/gm, ''))
     .pipe(gulp.dest(path.buildPath))
     .pipe(reload({stream: true}));
 });
