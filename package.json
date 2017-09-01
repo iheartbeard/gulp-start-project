@@ -25,7 +25,7 @@
     "gulp-svgmin": "latest",
     "gulp-svgstore": "latest",
     "gulp-file-include": "latest",
-    "gulp-rigger": "latest"
+    "gulp-replace": "latest"
   },
   "scripts": {
     "build": "gulp build",
