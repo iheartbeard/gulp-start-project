@@ -5,7 +5,7 @@
   "directories": {
     "srcPath": "./src/",
     "buildPath": "./build/",
-    "blocksDirName": "_include",
+    "blocksDirName": "blocks",
     "public": {
       "css": "./build/css",
       "img": "./build/img",
