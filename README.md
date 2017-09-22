@@ -13,7 +13,7 @@
     </tr>
     <tr>
       <td><code>npm start ЗАДАЧА</code></td>
-      <td>Запустить задачу gulp (список задач в `gulpfile.js`)</td>
+      <td>Запустить задачу gulp (список задач в <code>gulpfile.js</code>)</td>
     </tr>
    </tbody>
 </table>
