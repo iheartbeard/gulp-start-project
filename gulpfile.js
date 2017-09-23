@@ -1,9 +1,12 @@
 "use strict";
 
 // Получение настроек проекта из projectConfig.json
-const pjson = require('./projectConfig.json');
-const path = pjson.directories;
+let projectConfig = require('./projectConfig.json');
+let path = projectConfig.directories;
+let lists = getFilesList(projectConfig);
+// console.log(lists);
 
+const fs = require('fs');
 const gulp = require('gulp');
 const sass = require('gulp-sass');
 const plumber = require('gulp-plumber');
@@ -20,13 +23,20 @@ const svgmin = require('gulp-svgmin');
 const svgstore = require('gulp-svgstore');
 const run = require('run-sequence');
 const del = require('del');
+const size = require('gulp-size');
 const server = require('browser-sync');
 const reload = server.reload;
 
+// Генерация style.scss
+let styleImports = '/*!*\n * ВНИМАНИЕ! Этот файл генерируется автоматически.\n * Не пишите сюда ничего вручную, все такие правки будут потеряны.\n * Читайте ./README.md для понимания.\n */\n\n';
+lists.css.forEach(function(blockPath) {
+  styleImports += '@import \''+blockPath+'\';\n';
+});
+fs.writeFileSync(path.srcPath + 'scss/style.scss', styleImports);
 
 
 // Локальный сервер + слежение за изменением файлов
-gulp.task('serv', function() {
+gulp.task('serve', function() {
   server({
     server: {
       baseDir: path.buildPath
@@ -41,6 +51,7 @@ gulp.task('serv', function() {
 
 // Очистка папки build
 gulp.task('clean', function() {
+  console.log('---------- Очистка папки сборки');
   return del(path.buildPath);
 });
 
@@ -48,6 +59,15 @@ gulp.task('clean', function() {
 gulp.task('html', function () {
   console.log('---------- Сборка html');
   gulp.src(path.src.html)
+    .pipe(plumber({
+      errorHandler: function(err) {
+        notify.onError({
+          title: 'HTML compilation error',
+          message: err.message
+        })(err);
+        this.emit('end');
+      }
+    }))
     .pipe(include({
       prefix: '@@',
       basepath: '@file',
@@ -61,8 +81,16 @@ gulp.task('html', function () {
 // Сборка стилей
 gulp.task('css', function() {
   console.log('---------- Cборка стилей');
-  gulp.src('./src/scss/style.scss')
-    .pipe(plumber())
+  gulp.src(path.srcPath + 'scss/style.scss')
+    .pipe(plumber({
+      errorHandler: function(err) {
+        notify.onError({
+          title: 'Styles compilation error',
+          message: err.message
+        })(err);
+        this.emit('end');
+      }
+    }))
     .pipe(sass())
     .pipe(postcss([
       autoprefixer({browsers: [
@@ -74,6 +102,11 @@ gulp.task('css', function() {
     .pipe(gulp.dest(path.public.css))
     .pipe(minify())
     .pipe(rename('style-min.css'))
+    .pipe(size({
+      title: 'Размер',
+      showFiles: true,
+      showTotal: false,
+    }))
     .pipe(gulp.dest(path.public.css))
     .pipe(reload({stream: true}));
 });
@@ -104,6 +137,11 @@ gulp.task('js', function () {
 gulp.task('copy:fonts', function() {
   console.log('---------- Копирование шрифтов');
   gulp.src(path.src.fonts)
+    .pipe(size({
+      title: 'Размер',
+      showFiles: true,
+      showTotal: false,
+    }))
     .pipe(gulp.dest(path.public.fonts));
 });
 
@@ -119,3 +157,58 @@ gulp.task('build', function() {
     'copy:fonts'
   );
 });
+
+function getFilesList(config){
+
+  let res = {
+    'css': [],
+    'js': [],
+    'img': [],
+  };
+
+  // Запись @import-ов в style.css
+  for (let blockName in config.blocks) {
+    res.css.push(config.path.srcPath + config.path.blocksDirName + '/' + blockName + '/' + blockName + '.scss');
+    if(config.blocks[blockName].length) {
+      config.blocks[blockName].forEach(function(elementName) {
+        res.css.push(config.path.srcPath + config.path.blocksDirName + '/' + blockName + '/' + blockName + elementName + '.scss');
+      });
+    }
+  }
+  res.css = res.css.concat(config.addCssAfter);
+  res.css = config.addCssBefore.concat(res.css);
+
+  // JS
+  for (let blockName in config.blocks) {
+    res.js.push(config.path.srcPath + config.path.blocksDirName + '/' + blockName + '/' + blockName + '.js');
+    if(config.blocks[blockName].length) {
+      config.blocks[blockName].forEach(function(elementName) {
+        res.js.push(config.path.srcPath + config.path.blocksDirName + '/' + blockName + '/' + blockName + elementName + '.js');
+      });
+    }
+  }
+  res.js = res.js.concat(config.addJsAfter);
+  res.js = config.addJsBefore.concat(res.js);
+
+  // Images
+  // for (let blockName in config.blocks) {
+  //   res.img.push(config.path.srcPath + config.path.blocksDirName + '/' + blockName + '/img/*.{jpg,jpeg,gif,png,svg}');
+  // }
+  // res.img = config.addImages.concat(res.img);
+  //
+  return res;
+}
+
+/**
+ * Проверка существования файла или папки
+ * @param  {string} path      Путь до файла или папки]
+ * @return {boolean}
+ */
+function fileExist(path) {
+  const fs = require('fs');
+  try {
+    fs.statSync(path);
+  } catch(err) {
+    return !(err && err.code === 'ENOENT');
+  }
+}
