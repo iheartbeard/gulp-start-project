@@ -24,6 +24,7 @@
     "gulp-plumber": "latest",
     "gulp-postcss": "latest",
     "gulp-imagemin": "latest",
+    "gulp-notify": "latest",
     "gulp-svgmin": "latest",
     "gulp-svgstore": "latest",
     "gulp-file-include": "latest",
