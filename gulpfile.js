@@ -46,7 +46,7 @@ gulp.task('serve', function() {
     open: true,
     notify: false
   });
-  gulp.watch(path.watch.html, ['html'])
+  gulp.watch(path.watch.html, ['html']);
   gulp.watch(path.watch.style, ['css']);
 });
 
