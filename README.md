@@ -1,4 +1,5 @@
-# Шаблон для проекта с gulp
+# Шаблон для проекта с gulp [![devDependencies Status](https://david-dm.org/iheartbeard/gulp-start-project/dev-status.svg)]( https://david-dm.org/iheartbeard/gulp-start-project?type=dev) [![dependencies Status](https://david-dm.org/iheartbeard/gulp-start-project/status.svg)](https://david-dm.org/iheartbeard/gulp-start-project)
+
 <table>
   <thead>
     <tr>
