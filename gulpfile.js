@@ -8,6 +8,7 @@ let lists = getFilesList(projectConfig);
 
 const fs = require('fs');
 const gulp = require('gulp');
+const notify = require('gulp-notify');
 const sass = require('gulp-sass');
 const plumber = require('gulp-plumber');
 const postcss = require('gulp-postcss');
@@ -45,7 +46,7 @@ gulp.task('serve', function() {
     open: true,
     notify: false
   });
-  gulp.watch(path.watch.html, ['html'])
+  gulp.watch(path.watch.html, ['html']);
   gulp.watch(path.watch.style, ['css']);
 });
 
@@ -168,7 +169,7 @@ function getFilesList(config){
 
   // Запись @import-ов в style.css
   for (let blockName in config.blocks) {
-    res.css.push(config.path.srcPath + config.path.blocksDirName + '/' + blockName + '/' + blockName + '.scss');
+    res.css.push(path.srcPath + path.blocksDirName + '/' + blockName + '/' + blockName + '.scss');
     if(config.blocks[blockName].length) {
       config.blocks[blockName].forEach(function(elementName) {
         res.css.push(config.path.srcPath + config.path.blocksDirName + '/' + blockName + '/' + blockName + elementName + '.scss');
@@ -179,16 +180,16 @@ function getFilesList(config){
   res.css = config.addCssBefore.concat(res.css);
 
   // JS
-  for (let blockName in config.blocks) {
-    res.js.push(config.path.srcPath + config.path.blocksDirName + '/' + blockName + '/' + blockName + '.js');
-    if(config.blocks[blockName].length) {
-      config.blocks[blockName].forEach(function(elementName) {
-        res.js.push(config.path.srcPath + config.path.blocksDirName + '/' + blockName + '/' + blockName + elementName + '.js');
-      });
-    }
-  }
-  res.js = res.js.concat(config.addJsAfter);
-  res.js = config.addJsBefore.concat(res.js);
+  // for (let blockName in config.blocks) {
+  //   res.js.push(path.srcPath + path.blocksDirName + '/' + blockName + '/' + blockName + '.js');
+  //   if(config.blocks[blockName].length) {
+  //     config.blocks[blockName].forEach(function(elementName) {
+  //       res.js.push(config.path.srcPath + config.path.blocksDirName + '/' + blockName + '/' + blockName + elementName + '.js');
+  //     });
+  //   }
+  // }
+  // res.js = res.js.concat(config.addJsAfter);
+  // res.js = config.addJsBefore.concat(res.js);
 
   // Images
   // for (let blockName in config.blocks) {
